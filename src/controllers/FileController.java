@@ -16,10 +16,11 @@ import java.util.List;
 
 public class FileController {
     private Path filePath;
+    private File file;
 
     public FileController(String pathname) {
-        File file = new File(pathname);
-        this.filePath = file.toPath();
+        this.file = new File(pathname);
+        this.filePath = this.file.toPath();
     }
 
     public List<String> getLines() {
@@ -45,7 +46,7 @@ public class FileController {
         }
     }
 
-    public void appendLines(String[] lines) {
+    public void appendLines(List<String> lines) {
         try {
             for (String line : lines) {
                 Files.write(this.filePath, toNewLine(line).getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
@@ -55,4 +56,51 @@ public class FileController {
         }
     }
 
+    public void writeLine(String line) {
+        try {
+            Files.write(this.filePath, toNewLine(line).getBytes(StandardCharsets.UTF_8), StandardOpenOption.WRITE);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
+    public void writeLines(List<String> lines) {
+        try {
+            this.clearFile();
+            this.appendLines(lines);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
+    public void clearFile() {
+        try {
+            Files.write(this.filePath, ("").getBytes(StandardCharsets.UTF_8));
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
+    public void removeLineByIndex(int index) {
+        List<String> lines = this.getLines();
+
+        try {
+            lines.remove(index);
+            this.writeLines(lines);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
+    public void deleteFile() {
+        this.file.delete();
+    }
+
+    public void createFile() {
+        try {
+            this.file.createNewFile();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
 }
