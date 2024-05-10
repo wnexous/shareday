@@ -1,4 +1,4 @@
-package context;
+package configs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,11 +7,11 @@ import controllers.FileController;
 /**
  * How use?
  * 
- * String item = EnvContext.getItem("item");
+ * String item = EnvConfig.getItem("item");
  * 
  */
 
-public abstract class EnvContext {
+public abstract class EnvConfig {
 
     static private FileController fileController = new FileController(".env");
 
