@@ -1,48 +1,58 @@
 package controllers;
 
 import java.io.File;
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
+/**
+ * 
+ * HOW USE?
+ * 
+ * FileController fc = new FileController("path/from/file.txt")
+ */
+
 public class FileController {
+    private Path filePath;
 
-    static protected String basePathname = "files/";
-    static protected File folderBase = new File(basePathname);
-
-    static public File[] getFolderFiles() {
-        return folderBase.listFiles();
+    public FileController(String pathname) {
+        File file = new File(pathname);
+        this.filePath = file.toPath();
     }
 
-    static public File getFileByName(String filename) {
-        for (File file : getFolderFiles()) {
-            if (file.getName().equals(filename)) {
-                return file;
-            }
-        }
-        return null;
-    }
-
-    static public void deleteFile(File file) {
-        file.delete();
-    }
-
-    static public void createFile(String filename) throws IOException {
-        File newFile = new File(basePathname + filename);
-        newFile.createNewFile();
-    }
-
-    static public List<String> readFile(File file) {
-        Path path = file.toPath();
-        List<String> lines;
-
+    public List<String> getLines() {
         try {
-            lines = Files.readAllLines(path);
+            return Files.readAllLines(this.filePath);
         } catch (Exception e) {
-            lines = null;
+            return null;
         }
-
-        return lines;
     }
+
+    private String toNewLine(String line) {
+        if (!line.endsWith("\n"))
+            line += "\n";
+
+        return line;
+    }
+
+    public void appendLine(String line) {
+        try {
+            Files.write(this.filePath, toNewLine(line).getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
+    public void appendLines(String[] lines) {
+        try {
+            for (String line : lines) {
+                Files.write(this.filePath, toNewLine(line).getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
 }
