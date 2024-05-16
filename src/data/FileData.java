@@ -5,6 +5,7 @@ import controllers.DataController;
 import controllers.FileController;
 import types.DataColumnTypes;
 import types.FileTypes;
+import types.PermissionFileTypes;
 import types.UserTypes;
 
 public class FileData extends DataController {
