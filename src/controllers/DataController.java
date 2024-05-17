@@ -35,7 +35,7 @@ public class DataController {
         }
     }
 
-    protected void reloadFileRead(){
+    protected void reloadFileRead() {
         try {
             this.file = readFile(this.fileName);
         } catch (Exception e) {
@@ -126,6 +126,21 @@ public class DataController {
             }
         }
         return null;
+    }
+
+    public List<Integer> findIndexFromItemsByColumn(String item, DataColumnTypes column) {
+        String[] header = this.getHeader();
+        List<Integer> indexes = new ArrayList<>();
+        List<String[]> table = this.getTable();
+        for (int i = 0; i < header.length; i++) {
+            if (header[i].equals(column.getColumnName())) {
+                for (String[] row : table) {
+                    if (row[i].equals(item))
+                        indexes.add(table.indexOf(row));
+                }
+            }
+        }
+        return indexes;
     }
 
     public void saveFile(String[] header, List<String[]> table) {
