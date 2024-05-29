@@ -1,6 +1,12 @@
+package interfaces;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import controllers.HashController;
 
 public class Login extends JFrame implements ActionListener {
     JTextField usernameField;
@@ -36,14 +42,33 @@ public class Login extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
+        String passwordHash = HashController.encode(password);
 
         // Colocar o código para autenticação
 
-        
-        if (username.equals("usuario") && password.equals("senha")) {
-            JOptionPane.showMessageDialog(this, "Login realizado");
-        } else {
-            JOptionPane.showMessageDialog(this, "Usuário ou senha incorreta.", "Erro", JOptionPane.ERROR_MESSAGE);
+        String usersData = "C:\\Users\\nicol\\Documents\\Projetos\\Java\\RA2\\projfinal_update\\shareday\\src\\data\\UsersData.txt";
+        String linha = "";
+        String separador = ";";
+
+        try (BufferedReader br = new BufferedReader(new FileReader(usersData))) {
+            boolean encontrou = false;
+            while((linha = br.readLine()) != null) {
+                String[] campos = linha.split(separador);
+
+                String usuario = campos[0];
+                String senha = campos[1];
+
+                if (username.equals(usuario) && HashController.verify(senha, password)) {
+                    JOptionPane.showMessageDialog(null, "Login realizado");
+                    encontrou = true;
+                    break;
+                }
+            }
+            if (!encontrou) {
+                JOptionPane.showMessageDialog(null, "Usuário ou senha incorreta.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (IOException ioe){
+            System.out.println(ioe.getMessage());
         }
     }
 
