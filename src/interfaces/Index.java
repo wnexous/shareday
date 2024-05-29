@@ -12,6 +12,7 @@ public class Index extends JFrame implements ActionListener {
     JTextArea textArea;
     JFileChooser fileChooser;
     SecretKey secretKey;
+    private static final String KEY_FILE = "secret.key";
 
     public Index() {
         setTitle("Editor de Texto");
@@ -27,7 +28,7 @@ public class Index extends JFrame implements ActionListener {
 
         fileChooser = new JFileChooser();
 
-        generateSecretKey();
+        loadOrCreateSecretKey();
 
         setVisible(true);
     }
@@ -95,6 +96,9 @@ public class Index extends JFrame implements ActionListener {
                 textArea.setText(decryptedText);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, "Erro ao abrir arquivo", "Erro", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Erro ao descriptografar arquivo", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -109,6 +113,26 @@ public class Index extends JFrame implements ActionListener {
                 writer.write(encryptedText);
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, "Erro ao salvar arquivo", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void loadOrCreateSecretKey() {
+        File keyFile = new File(KEY_FILE);
+        if (keyFile.exists()) {
+            try (FileInputStream fis = new FileInputStream(keyFile)) {
+                byte[] encodedKey = new byte[(int) keyFile.length()];
+                fis.read(encodedKey);
+                secretKey = new SecretKeySpec(encodedKey, "AES");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            generateSecretKey();
+            try (FileOutputStream fos = new FileOutputStream(keyFile)) {
+                fos.write(secretKey.getEncoded());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
