@@ -1,34 +1,27 @@
 package controllers;
 
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
-public abstract class HashController {
-
-    static public String encode(String text) {
+public class HashController {
+    
+    public static String encode(String password) {
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedhash = digest.digest(text.getBytes(StandardCharsets.UTF_8));
-
-            String hashedPass = toHex(new String(encodedhash));
-            return hashedPass;
-        } catch (Exception e) {
-            return null;
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hash = md.digest(password.getBytes());
+            StringBuilder hexString = new StringBuilder();
+            
+            for (byte b : hash) {
+                hexString.append(String.format("%02x", b));
+            }
+            
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    static public boolean verify(String hash, String text) {
-        return encode(text).equals(hash);
+    public static boolean verify(String password, String hash) {
+        return encode(password).equals(hash);
     }
-
-    static public String toHex(String text) {
-        StringBuilder hexString = new StringBuilder();
-        for (char c : text.toCharArray()) {
-            hexString.append(Integer.toHexString((int) c));
-        }
-
-        return hexString.toString();
-
-    }
-
 }
