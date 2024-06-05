@@ -1,4 +1,5 @@
-package interfaces;
+package pages;
+
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;

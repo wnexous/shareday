@@ -1,4 +1,5 @@
-package graphic;
+package pages;
+
 
 import javax.swing.*;
 import java.awt.*;
