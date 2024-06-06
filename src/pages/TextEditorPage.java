@@ -11,13 +11,13 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.Base64;
 
-public class Index extends JFrame implements ActionListener {
+public class TextEditorPage extends JFrame implements ActionListener {
     JTextArea textArea;
     JFileChooser fileChooser;
     SecretKey secretKey;
     private static final String KEY_FILE = "secret.key";
 
-    public Index() {
+    public TextEditorPage() {
         setTitle("Editor de Texto");
         setSize(800, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -175,6 +175,6 @@ public class Index extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {    
-        SwingUtilities.invokeLater(() -> new Index());
+        SwingUtilities.invokeLater(() -> new TextEditorPage());
     }
 }

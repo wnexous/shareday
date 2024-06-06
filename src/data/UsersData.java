@@ -29,9 +29,7 @@ public class UsersData extends DataController {
     }
 
     public void createUser(UserTypes user) {
-
         String hashPassword = HashController.encode(user.getPassword());
-        System.out.println(hashPassword);
         String[] userRow = new String[] { user.getUsername(), hashPassword };
         this.appendRow(userRow);
     }
