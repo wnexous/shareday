@@ -1,22 +1,23 @@
 package pages;
 
 import javax.swing.*;
-
 import auth.Auth;
-
 import java.awt.*;
 import java.awt.event.*;
 import controllers.HashController;
 import data.UsersData;
 import types.UserTypes;
+import java.util.function.Consumer;
 
 public class LoginPage extends JFrame implements ActionListener {
     JTextField usernameField;
     JPasswordField passwordField;
-
     UsersData usersData = new UsersData();
+    private Consumer<UserTypes> onLoginSuccess;
 
-    public LoginPage() {
+    public LoginPage(Consumer<UserTypes> onLoginSuccess) {
+        this.onLoginSuccess = onLoginSuccess;
+
         setTitle("Login de Usuário");
         setSize(400, 200);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -54,10 +55,8 @@ public class LoginPage extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(null, "Usuário incorreto.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        System.out.println(passwordHash);
-        System.out.println(user.getPassword());
 
-        if (!(passwordHash.equals(user.getPassword()))) {
+        if (!passwordHash.equals(user.getPassword())) {
             JOptionPane.showMessageDialog(null, "Senha incorreta.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -65,37 +64,14 @@ public class LoginPage extends JFrame implements ActionListener {
         Auth.setUser(user);
         JOptionPane.showMessageDialog(null, "Login realizado");
 
-        // Colocar o código para autenticação
+        // Notifica o callback que o login foi bem-sucedido
+        onLoginSuccess.accept(user);
 
-        // String usersData =
-        // "C:\\Users\\nicol\\Documents\\Projetos\\Java\\RA2\\projfinal_update\\shareday\\src\\data\\UsersData.txt";
-        // String linha = "";
-        // String separador = ";";
-
-        // try (BufferedReader br = new BufferedReader(new FileReader(usersData))) {
-        // boolean encontrou = false;
-        // while((linha = br.readLine()) != null) {
-        // String[] campos = linha.split(separador);
-
-        // String usuario = campos[0];
-        // String senha = campos[1];
-
-        // if (username.equals(usuario) && HashController.verify(senha, password)) {
-        // JOptionPane.showMessageDialog(null, "Login realizado");
-        // encontrou = true;
-        // break;
-        // }
-        // }
-        // if (!encontrou) {
-        // JOptionPane.showMessageDialog(null, "Usuário ou senha incorreta.", "Erro",
-        // JOptionPane.ERROR_MESSAGE);
-        // }
-        // } catch (IOException ioe){
-        // System.out.println(ioe.getMessage());
-        // }
+        // Fecha a janela de login
+        this.dispose();
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new LoginPage());
+        SwingUtilities.invokeLater(() -> new LoginPage(user -> new TextEditorPage()));
     }
 }
