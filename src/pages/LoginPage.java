@@ -4,6 +4,9 @@ import javax.swing.*;
 import auth.Auth;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeListener;
+import java.rmi.server.ObjID;
+
 import controllers.HashController;
 import data.UsersData;
 import types.UserTypes;
@@ -24,27 +27,56 @@ public class LoginPage extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 2));
+        panel.setLayout(new GridLayout(4, 2));
 
         JLabel usernameLabel = new JLabel("Usuário:");
-        usernameField = new JTextField();
         JLabel passwordLabel = new JLabel("Senha:");
-        passwordField = new JPasswordField();
         JButton loginButton = new JButton("Login");
+        JButton registerButton = new JButton("Register");
+
+        usernameField = new JTextField();
+        passwordField = new JPasswordField();
+
         loginButton.addActionListener(this);
+        registerButton.addActionListener(this);
 
         panel.add(usernameLabel);
         panel.add(usernameField);
         panel.add(passwordLabel);
         panel.add(passwordField);
+
         panel.add(new JLabel());
         panel.add(loginButton);
+        
+        panel.add(new JLabel());
+        panel.add(registerButton);
 
         add(panel);
         setVisible(true);
     }
 
     public void actionPerformed(ActionEvent e) {
+
+        switch (e.getActionCommand()) {
+            case "Login":
+                this.loginAction();
+                break;
+            case "Register":
+                this.registerAction();
+                break;
+
+            default:
+                break;
+        }
+
+    }
+
+    public void registerAction() {
+        new RegisterPage();
+    }
+
+    public void loginAction() {
+
         String username = usernameField.getText();
         String password = new String(passwordField.getPassword());
         String passwordHash = HashController.encode(password);
@@ -69,6 +101,7 @@ public class LoginPage extends JFrame implements ActionListener {
 
         // Fecha a janela de login
         this.dispose();
+
     }
 
     public static void main(String[] args) {

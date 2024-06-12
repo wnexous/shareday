@@ -9,7 +9,7 @@ import java.util.Properties;
 import java.security.MessageDigest;
 import java.util.Arrays;
 
-public class Criptografia {
+public class CriptografiaController {
 
     private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES";
